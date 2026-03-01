@@ -15,7 +15,7 @@ The project is deliberately engineered for depth over breadth. Every decision ha
 ## Architecture Overview
 
 ```
-Client → Vercel (Next.js 15) → Render (Spring Boot 3 API) → Neon (Serverless Postgres)
+Client → Vercel (Next.js 15) → Render (Spring Boot 4 API) → Neon (Serverless Postgres)
                                           ↕
                                   OpenAI GPT-4o-mini (Spring AI)
 ```
@@ -23,8 +23,8 @@ Client → Vercel (Next.js 15) → Render (Spring Boot 3 API) → Neon (Serverle
 ### Backend — Modular Monolith
 
 - **Java 21** with Virtual Threads (Project Loom)
-- **Spring Boot 3.3+** structured as a modular monolith under `com.petplatform.modules.*`
-- Modules are strictly isolated — no cross-module imports; only `shared/` is common
+- **Spring Boot 4** structured as a modular monolith under `io.petplatform.api.modules.*`
+- Modules are strictly isolated — no cross-module imports; only `config/` and `shared/` are common
 - **Spring AI** for in-process AI calls (no extra microservice)
 - **Flyway** for versioned SQL migrations
 - **Auth0 + Spring Security** (JWT / OAuth2 Resource Server)
@@ -35,7 +35,8 @@ Client → Vercel (Next.js 15) → Render (Spring Boot 3 API) → Neon (Serverle
 - **Next.js 15** with TypeScript and the App Router
 - Route groups: `(public)`, `(dashboard)`, `(admin)`
 - **TanStack Query** for server state, **Zustand** for client state
-- **Tailwind CSS + Shadcn/UI** component library
+- **Tailwind CSS v4 + Shadcn/UI** (Radix UI primitives)
+- **pnpm** as package manager
 
 ### Infrastructure
 
@@ -81,17 +82,17 @@ Appointment lifecycle: `PENDING → CONFIRMED → COMPLETED / CANCELLED`
 
 ```
 /
-├── backend-core/      # Java 21 + Spring Boot modular monolith
-│   └── src/main/java/com/petplatform/
-│       ├── shared/    # Auth, config, exceptions, shared DTOs
+├── pet-platform-app/    # Java 21 + Spring Boot 4 modular monolith
+│   ├── docker-compose.yml
+│   └── src/main/java/io/petplatform/api/
+│       ├── config/      # Security, beans, global configuration
 │       └── modules/
 │           └── grooming/  # Domain, repositories, services, API, AI
-└── frontend-ui/       # Next.js 15 App Router + TypeScript
-    ├── app/
-    │   ├── (public)/
-    │   ├── (dashboard)/
-    │   └── (admin)/
-    └── features/grooming/
+└── pet-platform-ui/     # Next.js 15 App Router + TypeScript
+    └── app/
+        ├── (public)/    # Landing, services, availability
+        ├── (dashboard)/ # Client booking and appointment views
+        └── (admin)/     # Admin panel + AI chat
 ```
 
 ---
@@ -118,7 +119,7 @@ Appointment lifecycle: `PENDING → CONFIRMED → COMPLETED / CANCELLED`
 ### Backend
 
 ```bash
-cd backend-core
+cd pet-platform-app
 docker-compose up -d      # start local Postgres
 ./gradlew bootRun
 ```
@@ -126,9 +127,9 @@ docker-compose up -d      # start local Postgres
 ### Frontend
 
 ```bash
-cd frontend-ui
-npm install
-npm run dev
+cd pet-platform-ui
+pnpm install
+pnpm dev
 ```
 
 API docs available at `http://localhost:8080/swagger-ui.html` when running locally.
