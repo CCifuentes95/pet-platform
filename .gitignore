@@ -1,0 +1,56 @@
+# ─── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── IDE / Editor ─────────────────────────────────────────────────────────────
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# ─── Backend (Java / Spring Boot / Gradle) ────────────────────────────────────
+backend-core/.gradle/
+backend-core/build/
+backend-core/out/
+backend-core/*.jar
+backend-core/*.war
+backend-core/bin/
+backend-core/.classpath
+backend-core/.project
+backend-core/.settings/
+backend-core/gradle/wrapper/gradle-wrapper.jar
+
+# Secrets / local config overrides
+backend-core/src/main/resources/application-local.yml
+backend-core/src/main/resources/application-secret.yml
+backend-core/.env
+
+# ─── Frontend (Next.js / Node) ────────────────────────────────────────────────
+frontend-ui/node_modules/
+frontend-ui/.next/
+frontend-ui/out/
+frontend-ui/.env
+frontend-ui/.env.local
+frontend-ui/.env.*.local
+frontend-ui/.turbo/
+
+# ─── Environment / Secrets (root level) ───────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ─── Docker ───────────────────────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Test / Coverage ──────────────────────────────────────────────────────────
+backend-core/build/reports/
+frontend-ui/coverage/
+
+CLAUDE.md
